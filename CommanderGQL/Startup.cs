@@ -32,8 +32,10 @@ namespace CommanderGQL
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // .Net 5 feature is AddPooledDbContextFactory
+            // form parallel request to dbContect it should use AddPooledDbContextFactory to response multiple request 
             services.AddPooledDbContextFactory<AppDbContext>(opt => opt.UseSqlServer
-            (Configuration.GetConnectionString("CommandsConStr")));
+           (Configuration.GetConnectionString("CommandsConStr")));
 
             services
                 .AddGraphQLServer()
@@ -45,9 +47,17 @@ namespace CommanderGQL
                 .AddFiltering()
                 .AddSorting()
                 .AddInMemorySubscriptions();
-            //.AddProjections();
+            //.AddProjections()
 
-
+            services.AddCors();
+            // it uses for .Net 6 and then no need add cors to pipline request
+            //services.AddCors(c=>
+            //{
+            //    c.AddPolicy("Policy", b =>
+            //    {
+            //        b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            //    });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +69,7 @@ namespace CommanderGQL
                 //app.UseSwagger();
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CommanderGQL v1"));
             }
+            app.UseCors(p => p.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
 
             app.UseWebSockets();
             //app.UseHttpsRedirection();
