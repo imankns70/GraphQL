@@ -16,7 +16,7 @@ namespace CommanderGQL.GraphQL.Commands
             descriptor.Description("Represent any executable command");
 
             descriptor
-                .Field(c => c.Platform)
+                .Field(c => c.Platform)                
                 .ResolveWith<Resolvers>(c => c.GetPlatform(default!, default!))
                 .UseDbContext<AppDbContext>()
                 .Description("this is the platform to which the command belongs");

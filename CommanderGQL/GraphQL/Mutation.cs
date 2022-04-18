@@ -27,10 +27,7 @@ namespace CommanderGQL.GraphQL
             {
                 Name = input.name
             };
-            Console.WriteLine("platform :::::", "input");
-            Console.WriteLine("input.name :::::", input.name);
-            Console.WriteLine("platform.Name :::::", platform.Name);
-            context.Add(platform);
+         
             await context.SaveChangesAsync(cancellationToken);
 
             await eventSender.SendAsync(nameof(Subscription.OnPlatformAdded), platform, cancellationToken);
